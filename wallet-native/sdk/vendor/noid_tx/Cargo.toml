@@ -1,0 +1,10 @@
+[package]
+name = "noid_tx_sdk"
+version.workspace = true
+edition = "2021"
+license = "Apache-2.0"
+
+[dependencies]
+noid_core = { package = "noid_core_sdk", path = "../noid_core" }
+noid_poseidon2b = { package = "noid_poseidon2b_sdk", path = "../noid_poseidon2b" }
+serde = { version = "1", features = ["derive"] }

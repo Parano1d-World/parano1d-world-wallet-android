@@ -1,0 +1,32 @@
+[package]
+name = "parano1d-android-core"
+version = "1.0.0"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+# One Android library holding all three cores, like the iOS app links them together:
+#   paramo1d      - the device node, chat and NOID wallet (org.parano1d.courier.NativeCore)
+#   node          - iOS Node crate: native token/NFT planner and submit (org.parano1d.courier.NodeCore)
+#   native        - iOS Native crate: wallet-core signer and payment journal (org.parano1d.courier.WalletCore)
+# The node and native sources are copied unchanged from the iOS TestFlight tree (Node/, Native/),
+# so planning, fees, reservations and signing are byte-identical on both platforms.
+[workspace]
+
+[lib]
+name = "parano1d_android"
+crate-type = ["cdylib"]
+
+[dependencies]
+paramo1d = { path = "../../paramo1d" }
+paranoid-ios-node = { path = "../node" }
+paranoid-ios-core = { path = "../native" }
+jni = "0.21"
+zeroize = "1"
+
+[patch.crates-io]
+mdbx-sys = { path = "../../paramo1d/vendor/mdbx-sys" }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

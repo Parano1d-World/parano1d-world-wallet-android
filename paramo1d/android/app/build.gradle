@@ -1,0 +1,69 @@
+plugins { id 'com.android.application' }
+
+def releaseStore = System.getenv('PARANO1D_ANDROID_KEYSTORE_PATH')
+
+android {
+    namespace 'org.parano1d.courier'
+    compileSdk 36
+    buildToolsVersion '36.0.0'
+    buildFeatures { buildConfig true }
+    defaultConfig {
+        // Play Store edition. Must match :wear's applicationId.
+        applicationId 'com.koajent.parano1d.wallet'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '1.0.0'
+        ndk { abiFilters 'arm64-v8a' }
+    }
+    signingConfigs {
+        if (releaseStore) {
+            release {
+                storeFile file(releaseStore)
+                storePassword System.getenv('PARANO1D_ANDROID_STORE_PASSWORD')
+                keyAlias System.getenv('PARANO1D_ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('PARANO1D_ANDROID_KEY_PASSWORD') ?: System.getenv('PARANO1D_ANDROID_STORE_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        release {
+            // Release builds ship only runnable code:
+            // R8 shrinks the Java code, and the web UI assets come from the note-free copy below.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
+            if (releaseStore) signingConfig signingConfigs.release
+        }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    packaging { jniLibs { useLegacyPackaging = true } }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.13.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation 'com.google.zxing:core:3.5.4'
+    implementation 'com.google.android.gms:play-services-wearable:19.0.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
+}
+
+// Release assets without comments or internal notes. Scripts/strip-release-assets.py copies src/main/assets,
+// strips comments from JS/CSS/HTML/SVG and note keys from JSON, keeps licence texts, and fails the build if any
+// internal wording is left. Release-type assets override main's files of the same name.
+def releaseAssetsDir = layout.buildDirectory.dir('release-assets')
+def stripReleaseAssets = tasks.register('stripReleaseAssets', Exec) {
+    def source = file('src/main/assets')
+    def script = file("${rootDir}/../../Scripts/strip-release-assets.py")
+    inputs.dir source
+    inputs.file script
+    outputs.dir releaseAssetsDir
+    commandLine 'python3', script.path, source.path, releaseAssetsDir.get().asFile.path
+}
+android.sourceSets.release.assets.srcDir(releaseAssetsDir.get().asFile)
+// Every release task that may read the stripped assets (merge, lint-vital models, bundling) runs after the strip.
+tasks.matching { it.name != 'stripReleaseAssets' && it.name.contains('Release') }.configureEach { dependsOn stripReleaseAssets }

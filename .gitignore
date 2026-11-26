@@ -1,0 +1,16 @@
+target/
+build/
+.gradle/
+node_modules/
+local.properties
+*.apk
+*.aab
+*.log
+.DS_Store
+# Secrets and signing files must never be committed
+*.jks
+*.keystore
+*.p12
+*.pem
+.env*
+google-services*.json

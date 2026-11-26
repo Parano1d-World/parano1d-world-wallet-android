@@ -1,0 +1,22 @@
+[package]
+name = "paranoid-ios-core"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+[lib]
+crate-type = ["staticlib", "rlib"]
+[dependencies]
+parano1d-authorization = { path = "../sdk/crates/authorization" }
+noid_poseidon2b = { package = "noid_poseidon2b_sdk", path = "../sdk/vendor/noid_poseidon2b" }
+serde_json = "1"
+hex = "0.4"
+sha3 = "0.10"
+zeroize = "1"
+noid_core = { package = "noid_core_sdk", path = "../sdk/vendor/noid_core" }
+paramo1d-courier = { path = "../../paramo1d/courier" }
+argon2 = "0.5"
+subtle = "2.6"
+
+sha2 = "0.10"
+noid_tx = { package = "noid_tx_sdk", path = "../sdk/vendor/noid_tx" }
+noid_gkr = { package = "noid_gkr_sdk", path = "../sdk/vendor/noid_gkr" }

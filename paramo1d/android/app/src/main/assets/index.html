@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#00ff80">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <title>Parano1d</title>
+  <link rel="stylesheet" href="app.css">
+  <script src="edition.js"></script>
+  <script src="storage-shim.js"></script>
+  <script src="qrcode.js" defer></script>
+  <script src="chat-text.js" defer></script>
+  <script src="avatars.js" defer></script>
+  <script src="avatar-art.js" defer></script>
+  <script src="avatar-ui.js" defer></script>
+  <script src="chat-safety.js" defer></script>
+  <script src="chat-ui.js" defer></script>
+  <script src="chat-storage.js" defer></script>
+  <script src="chat-requests.js" defer></script>
+  <script src="asset-send.js" defer></script>
+  <script src="setup.js" defer></script>
+  <script src="reorder.js" defer></script>
+  <script src="settings-ui.js" defer></script>
+  <script src="contacts-plus.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="mining.js" defer></script>
+</head>
+<body>
+  <div id="app">
+    <header class="masthead">
+      <div class="brand-bar" aria-label="Parano1d World"><img class="brand-emblem" src="brand.png" alt=""><span class="pixel-emblem" aria-hidden="true"></span><span class="wordmark"><span>PARANO<b>1</b>D</span><small>WORLD</small></span></div>
+      <div class="mast-actions">
+        <button id="connection" class="connection" aria-label="Connection options"><span class="connection-action">Connections</span><span class="connection-key"><span class="connection-state"><i></i><span id="connection-status">Offline</span></span><svg class="icon" aria-hidden="true"><use href="icons.svg#outgoing"/></svg></span></button>
+        <button id="vpn-switch" class="hardware-switch vpn-switch" role="switch" aria-label="App VPN" aria-checked="false" aria-describedby="vpn-description"><span class="paranoid-label">App VPN<span class="paranoid-led vpn-led" aria-hidden="true"></span></span><span class="rocker-case" aria-hidden="true"><span class="rocker-lever"></span></span></button>
+        <span id="vpn-description" class="sr-only">Off. Uses your normal phone connection.</span>
+        <button id="paranoid-switch" class="shield-switch" role="switch" aria-label="Parano1d mode, Off" aria-checked="false" aria-describedby="paranoid-description"><svg class="shield-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 4.5 5.6v5.9c0 4.6 3.1 8.6 7.5 9.7 4.4-1.1 7.5-5.1 7.5-9.7V5.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><svg class="shield-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 4.5 5.6v5.9c0 4.6 3.1 8.6 7.5 9.7 4.4-1.1 7.5-5.1 7.5-9.7V5.6z" fill="currentColor"/><rect x="9" y="11" width="6" height="5" rx="1" fill="var(--paper)"/><path d="M10.2 11V9.6a1.8 1.8 0 0 1 3.6 0V11" fill="none" stroke="var(--paper)" stroke-width="1.5"/></svg><span class="paranoid-label">Parano1d mode</span></button>
+        <span id="paranoid-description" class="sr-only">Wallet data and payments use direct P2P when on. Chats keep their current connection.</span>
+        <button id="lock-button" class="icon-button" aria-label="Lock wallet"><svg class="icon" aria-hidden="true"><use href="icons.svg#lock"></use></svg></button>
+        <button id="settings-button" class="icon-button" aria-label="Settings"><svg class="icon" aria-hidden="true"><use href="icons.svg#settings"></use></svg></button>
+      </div>
+    </header>
+
+    <section id="storage-alert" class="storage-alert" role="status" hidden><span><strong>Storage is full</strong> · Clear some chat history to receive new messages.</span><button type="button" id="storage-manage" class="outline-button">Choose chats</button></section>
+    <main class="workspace">
+      <aside class="sidebar" id="sidebar">
+        <div class="identity-strip"><button id="identity-button" class="identity-button"><span id="my-avatar" class="avatar default-avatar"><svg class="icon" aria-hidden="true"><use href="icons.svg#wallet"></use></svg></span><span><strong id="my-name">Your identity</strong><small id="my-fingerprint">Stored on this device</small></span></button><button class="icon-button" id="invite-button" aria-label="Share your contact"><svg class="icon" aria-hidden="true"><use href="icons.svg#share"></use></svg></button></div>
+        <nav class="desktop-tabs" aria-label="Main navigation"><button data-tab="wallet" class="active">Home</button><button data-tab="nfts">NFTs</button><button data-tab="chat">Chat</button><button data-tab="ecosystem">Ecosystem</button><button data-tab="mining" hidden>Mining</button></nav>
+        <section class="list-section" id="list-section">
+          <div class="chat-switch" role="tablist" aria-label="Chat"><button data-chat="groups" role="tab">#parano1d</button><button data-chat="direct" role="tab">Private</button></div><div class="section-heading"><h1 id="list-heading">Community</h1><button id="new-button" class="outline-button" aria-label="Add a contact">Add contact</button></div>
+          <label class="search-field"><span><svg class="icon" aria-hidden="true"><use href="icons.svg#search"></use></svg></span><input id="search" type="search" placeholder="Find a conversation" autocomplete="off" aria-label="Find a conversation"></label>
+          <div id="conversation-list" class="conversation-list"></div>
+          <div class="list-footnote" id="list-footnote">One community. Direct connections.</div>
+        </section>
+      </aside>
+
+      <section class="content" id="content">
+        <section id="welcome-panel" class="welcome-panel">
+          <span class="eyebrow">DIRECT MESSAGES</span><h2>Open a<br><span>conversation.</span></h2>
+          <p id="welcome-description">Add a contact or meet someone in the community chat.</p>
+          <button class="primary-button" id="welcome-group">Open #parano1d <span><svg class="icon" aria-hidden="true"><use href="icons.svg#outgoing"></use></svg></span></button>
+        </section>
+
+        <section id="chat-panel" class="chat-panel" hidden>
+          <div class="chat-toolbar"><div class="chat-switch in-panel" role="tablist" aria-label="Chat"><button data-chat="groups" role="tab">#parano1d</button><button data-chat="direct" role="tab">Private</button></div>
+          <header class="chat-header"><button class="icon-button back-button" id="back-button" aria-label="Back"><svg class="icon" aria-hidden="true"><use href="icons.svg#back"></use></svg></button><span class="avatar room-avatar" id="chat-avatar">#</span><button class="chat-title" id="chat-profile"><strong id="chat-name"></strong><span id="chat-description"></span></button><button id="chat-search-button" class="icon-button" aria-label="Search this conversation"><svg class="icon" aria-hidden="true"><use href="icons.svg#search"></use></svg></button><button id="chat-options-button" class="icon-button" aria-label="Chat options"><svg class="icon" aria-hidden="true"><use href="icons.svg#more"></use></svg></button><button id="payment-button" class="outline-button" hidden>Send NOID <svg class="icon" aria-hidden="true"><use href="icons.svg#outgoing"></use></svg></button></header>
+          <div id="chat-search" class="chat-search" hidden><input id="chat-search-input" type="search" placeholder="Search this conversation" aria-label="Search messages"><span id="chat-search-count"></span><button id="chat-search-previous" class="icon-button" aria-label="Previous match"><svg class="icon" aria-hidden="true"><use href="icons.svg#up"></use></svg></button><button id="chat-search-next" class="icon-button" aria-label="Next match"><svg class="icon" aria-hidden="true"><use href="icons.svg#down"></use></svg></button><button id="chat-search-close" class="icon-button" aria-label="Close message search"><svg class="icon" aria-hidden="true"><use href="icons.svg#close"></use></svg></button></div>
+          <div class="chat-context" id="chat-context"></div>
+          </div>
+          <div class="message-scroll" id="message-scroll"><div id="messages" class="messages" aria-live="polite"></div></div>
+          <button id="latest-messages" class="latest-messages" aria-label="Go to latest messages" hidden><svg class="icon" aria-hidden="true"><use href="icons.svg#down"></use></svg><span id="latest-message-count" hidden></span></button>
+          <div class="compose-wrapper"><div id="reply-preview" class="reply-preview" hidden><button id="reply-preview-message" class="reply-preview-message"><strong id="reply-preview-author"></strong><span id="reply-preview-text"></span></button><button id="cancel-reply" class="icon-button" aria-label="Cancel reply"><svg class="icon" aria-hidden="true"><use href="icons.svg#close"></use></svg></button></div><form id="compose-form" class="composer"><button type="button" id="attachment-button" class="icon-button" aria-label="Conversation actions"><svg class="icon" aria-hidden="true"><use href="icons.svg#plus"></use></svg></button><button type="button" id="emoji-button" class="icon-button" aria-label="Choose emoji" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="icons.svg#smile"></use></svg></button><textarea id="compose" rows="1" maxlength="4096" placeholder="Message" aria-label="Message"></textarea><button type="submit" class="send-button" aria-label="Send message" disabled><svg class="icon" aria-hidden="true"><use href="icons.svg#send"></use></svg></button></form><div id="emoji-panel" class="emoji-panel" hidden><div id="emoji-categories" class="emoji-categories" role="tablist" aria-label="Emoji categories"></div><div id="emoji-grid" class="emoji-grid" role="group" aria-label="Emoji"></div></div><div class="compose-footer"><span id="compose-limit" class="compose-limit" hidden></span></div><div id="keyboard-done" class="keyboard-done" role="toolbar" aria-label="Keyboard"><button type="button">Done</button></div></div>
+        </section>
+
+        <section id="wallet-panel" class="wallet-panel home" hidden>
+          <div class="home-top"><span class="account-chip"><img src="brand.png" alt=""><span id="wallet-name">Main wallet</span></span><span id="node-status" class="status-label" data-state="syncing"><svg class="icon status-icon" aria-hidden="true"><use href="icons.svg#refresh"></use></svg><span id="node-status-text">Preparing</span></span></div>
+          <p id="noid-price" class="noid-price" aria-label="NOID price" hidden></p>
+          <div class="balance-block">
+            <div class="balance-label"><span id="balance-eyebrow" class="eyebrow">VERIFIED NOID</span><button id="hide-balance" class="icon-button eye-button" aria-label="Hide balances"><svg class="icon" aria-hidden="true"><use href="icons.svg#eye"></use></svg></button></div>
+            <div class="balance-figure"><strong id="balance">—</strong><span>NOID</span></div>
+            <p id="balance-usd" class="balance-usd" hidden></p>
+            <p id="verified-block" class="verified-block"></p>
+            <p id="balance-description">Open your wallet online before making your first payment.</p>
+          </div>
+          <div class="round-actions">
+            <button id="send-button"><span class="round"><svg class="icon" aria-hidden="true"><use href="icons.svg#outgoing"></use></svg></span>Send</button>
+            <button id="receive-button"><span class="round"><svg class="icon" aria-hidden="true"><use href="icons.svg#receive"></use></svg></span>Receive</button>
+            <button id="nft-shortcut"><span class="round"><svg class="icon" aria-hidden="true"><use href="icons.svg#layers"></use></svg></span>NFT gallery</button>
+            <button id="more-button"><span class="round"><svg class="icon" aria-hidden="true"><use href="icons.svg#more"></use></svg></span>More</button>
+          </div>
+          <button id="sync-button" class="text-button refresh-link">Update balance</button>
+          <div id="wallet-setup"></div><div id="pending-payments" class="pending-payments"></div>
+          <section class="home-card"><div class="section-heading"><h2>Receipts</h2><button id="import-receipt-button" class="outline-button" hidden>Import receipt</button></div><p class="card-note">Saved payments, each verified by this phone.</p><div id="receipts" class="receipts"></div></section>
+          <section class="home-card"><div class="section-heading"><h2>Assets</h2></div><div class="asset-row"><img src="brand.png" alt=""><span><strong>NOID</strong><small>Parano1d native coin</small></span><span id="asset-noid" class="asset-amount">—</span></div><div id="token-rows"></div></section>
+          <section class="home-card" id="collections-card" hidden><div class="section-heading"><h2>Collections</h2></div><div id="collection-rows"></div></section>
+          <section class="home-card connection-home"><div class="section-heading"><h2>Connection</h2></div><div id="connection-strip" class="connection-strip"></div></section>
+          <div class="address-block"><span class="eyebrow">RECEIVING ADDRESS</span><button id="wallet-address" class="address-copy" aria-label="Copy wallet address"></button></div>
+        </section>
+        <section id="nfts-panel" class="page-panel" hidden>
+          <span class="eyebrow">COLLECTION</span><h1 class="page-title">NFTs</h1>
+          <div id="nft-view"></div>
+        </section>
+        <section id="ecosystem-panel" class="page-panel" hidden>
+          <span class="eyebrow">PARANO1D WORLD</span><h1 class="page-title">Ecosystem</h1>
+          <p class="card-note ecosystem-intro">Links open in your browser. Your wallet isn’t connected or shared.</p>
+          <div id="ecosystem-list" class="ecosystem-groups"></div>
+        </section>
+        <section id="mining-panel" class="page-panel" hidden>
+          <div class="mining-header"><img class="mining-emblem" src="logos/mining-emblem.png" alt="" aria-hidden="true"><span class="mining-title"><span class="eyebrow">PARANO1D WORLD</span><h1 class="page-title">Mining</h1><small id="mining-subtitle"></small></span><button id="mining-add" class="icon-button mining-plus" aria-label="Add a mining computer" title="Tap to scan its pairing QR. Press and hold for more options."><svg class="icon" aria-hidden="true"><use href="icons.svg#plus"></use></svg></button></div>
+          <div id="mining-view"></div>
+        </section>
+      </section>
+    </main>
+    <nav class="mobile-tabs" aria-label="Main navigation"><button data-tab="wallet" class="active"><span><svg class="icon" aria-hidden="true"><use href="icons.svg#home"></use></svg></span>Home</button><button data-tab="nfts"><span><svg class="icon" aria-hidden="true"><use href="icons.svg#layers"></use></svg></span>NFTs</button><button data-tab="chat"><span><svg class="icon" aria-hidden="true"><use href="icons.svg#chat"></use></svg></span>Chat</button><button data-tab="ecosystem"><span><svg class="icon" aria-hidden="true"><use href="icons.svg#compass"></use></svg></span>Ecosystem</button><button data-tab="mining" hidden><span><i class="pickaxe-glyph" aria-hidden="true"></i></span>Mining</button></nav>
+  </div>
+
+  <div id="onboarding" class="onboarding" hidden><div class="onboarding-inner"><div id="setup-view" class="setup-view" aria-live="polite"></div></div></div>
+  <dialog id="modal"><div class="modal-heading"><span id="modal-eyebrow" class="eyebrow">PARAMO1D</span><button id="close-modal" class="icon-button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="icons.svg#close"></use></svg></button></div><h2 id="modal-title"></h2><div id="modal-content"></div></dialog>
+  <div id="toast" role="status" hidden></div>
+  <div id="mode-glitch" aria-hidden="true"></div>
+</body>
+</html>
